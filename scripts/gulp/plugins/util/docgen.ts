@@ -192,28 +192,32 @@ export class Parser {
   }
 
   public getComponentInfo(
-    symbolParam: ts.Symbol,
+    exp: ts.Symbol,
     source: ts.SourceFile,
     componentNameResolver: ComponentNameResolver = () => undefined,
   ): ComponentDoc | null {
-    if (!!symbolParam.declarations && symbolParam.declarations.length === 0) {
+    if (!!exp.declarations && exp.declarations.length === 0) {
       return null;
     }
 
-    let exp = symbolParam;
-
     const type = this.checker.getTypeOfSymbolAtLocation(exp, exp.valueDeclaration || exp.declarations![0]);
     let commentSource = exp;
+    const typeSymbol = type.symbol || type.aliasSymbol || getComponentSymbolOfType(type);
 
     if (!exp.valueDeclaration) {
-      const componentSymbol = getComponentSymbolOfType(type);
-
-      exp = type.symbol || componentSymbol;
-      if (!exp) {
+      if (!typeSymbol) {
         return null;
       }
+      exp = typeSymbol;
+      const expName = exp.getName();
 
-      if (componentSymbol) {
+      if (
+        expName === 'StatelessComponent' ||
+        expName === 'Stateless' ||
+        expName === 'StyledComponentClass' ||
+        expName === 'StyledComponent' ||
+        expName === 'FunctionComponent'
+      ) {
         commentSource = this.checker.getAliasedSymbol(commentSource);
       } else {
         commentSource = exp;
@@ -221,10 +225,7 @@ export class Parser {
     }
 
     // Skip over PropTypes that are exported
-    if (
-      type.symbol &&
-      (type.symbol.getEscapedName() === 'Requireable' || type.symbol.getEscapedName() === 'Validator')
-    ) {
+    if (typeSymbol && (typeSymbol.getEscapedName() === 'Requireable' || typeSymbol.getEscapedName() === 'Validator')) {
       return null;
     }
 

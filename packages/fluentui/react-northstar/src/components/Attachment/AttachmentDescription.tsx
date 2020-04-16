@@ -1,5 +1,4 @@
-import { compose } from '@fluentui/react-bindings';
-import * as React from 'react';
+import { compose, ComponentWithAs } from '@fluentui/react-bindings';
 
 import { WithAsProp } from '../../types';
 import { commonPropTypes, createShorthandFactory, ShorthandFactory } from '../../utils';
@@ -15,6 +14,7 @@ export const attachmentDescriptionClassName = 'ui-attachment__description';
  * A AttachmentDescription provides more detailed information about the Attachment.
  */
 const AttachmentDescription = compose<
+  'span',
   AttachmentDescriptionOwnProps,
   AttachmentDescriptionStylesProps,
   WithAsProp<BoxProps>,
@@ -24,10 +24,14 @@ const AttachmentDescription = compose<
   displayName: 'AttachmentDescription',
 
   overrideStyles: true,
-}) as React.FC<AttachmentDescriptionProps> & {
-  create?: ShorthandFactory<AttachmentDescriptionProps>;
-  deprecated_className: string;
-};
+}) as ComponentWithAs<
+  'span',
+  AttachmentDescriptionProps,
+  {
+    create?: ShorthandFactory<AttachmentDescriptionProps>;
+    deprecated_className: string;
+  }
+>;
 
 AttachmentDescription.defaultProps = {
   as: 'span',

@@ -1,5 +1,4 @@
-import { compose } from '@fluentui/react-bindings';
-import * as React from 'react';
+import { compose, ComponentWithAs } from '@fluentui/react-bindings';
 
 import { WithAsProp } from '../../types';
 import { commonPropTypes, createShorthandFactory, ShorthandFactory } from '../../utils';
@@ -15,6 +14,7 @@ export const attachmentHeaderClassName = 'ui-attachment__header';
  * A AttachmentHeader provides a title for the Attachment.
  */
 const AttachmentHeader = compose<
+  'span',
   AttachmentHeaderOwnProps,
   AttachmentHeaderStylesProps,
   WithAsProp<BoxProps>,
@@ -24,10 +24,14 @@ const AttachmentHeader = compose<
   displayName: 'AttachmentHeader',
 
   overrideStyles: true,
-}) as React.FC<AttachmentHeaderProps> & {
-  create?: ShorthandFactory<AttachmentHeaderProps>;
-  deprecated_className: string;
-};
+}) as ComponentWithAs<
+  'span',
+  AttachmentHeaderProps,
+  {
+    create?: ShorthandFactory<AttachmentHeaderProps>;
+    deprecated_className: string;
+  }
+>;
 
 AttachmentHeader.defaultProps = {
   as: 'span',
