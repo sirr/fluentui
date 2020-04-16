@@ -1,11 +1,10 @@
 import { compose, ComponentWithAs } from '@fluentui/react-bindings';
 
-import { WithAsProp } from '../../types';
 import { commonPropTypes, createShorthandFactory, ShorthandFactory } from '../../utils';
 import Box, { BoxProps, BoxStylesProps } from '../Box/Box';
 
 interface AttachmentHeaderOwnProps {}
-export interface AttachmentHeaderProps extends AttachmentHeaderOwnProps, WithAsProp<BoxProps> {}
+export interface AttachmentHeaderProps extends AttachmentHeaderOwnProps, BoxProps {}
 
 export type AttachmentHeaderStylesProps = never;
 export const attachmentHeaderClassName = 'ui-attachment__header';
@@ -17,7 +16,7 @@ const AttachmentHeader = compose<
   'span',
   AttachmentHeaderOwnProps,
   AttachmentHeaderStylesProps,
-  WithAsProp<BoxProps>,
+  BoxProps,
   BoxStylesProps
 >(Box, {
   className: attachmentHeaderClassName,
@@ -29,7 +28,6 @@ const AttachmentHeader = compose<
   AttachmentHeaderProps,
   {
     create?: ShorthandFactory<AttachmentHeaderProps>;
-    deprecated_className: string;
   }
 >;
 

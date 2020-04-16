@@ -8,7 +8,7 @@ export type PropsOfElement<
   E extends keyof JSX.IntrinsicElements | React.JSXElementConstructor<any>
 > = JSX.LibraryManagedAttributes<E, React.ComponentPropsWithRef<E>>;
 
-export type ComponentWithAs<E extends React.ElementType, P> = (<EE extends React.ElementType = E>(
+export type ComponentWithAs<E extends React.ElementType, P, S = {}> = (<EE extends React.ElementType = E>(
   props: Omit<PropsOfElement<EE>, 'as' | keyof P> & { as?: EE } & P,
 ) => JSX.Element) & {
   displayName?: string;
@@ -17,7 +17,7 @@ export type ComponentWithAs<E extends React.ElementType, P> = (<EE extends React
   propTypes?: React.WeakValidationMap<P> & {
     as: React.Requireable<string | ((props: any, context?: any) => any) | (new (props: any, context?: any) => any)>;
   };
-};
+} & S;
 
 //
 // Compose types

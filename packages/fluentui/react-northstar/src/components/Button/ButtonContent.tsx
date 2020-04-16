@@ -12,11 +12,13 @@ interface ButtonContentOwnProps {
 export interface ButtonContentProps extends BoxProps, ButtonContentOwnProps {}
 export type ButtonContentStylesProps = Pick<ButtonContentProps, 'size'>;
 
+export const buttonContentClassName = 'ui-button__content';
+
 /**
  * A ButtonContent allows a user to have a dedicated component that can be targeted from the theme.
  */
 const ButtonContent = compose<'div', ButtonContentProps, ButtonStylesProps, BoxProps, BoxStylesProps>(Box, {
-  className: 'ui-button__content',
+  className: buttonContentClassName,
   displayName: 'ButtonContent',
   handledProps: ['size'],
 

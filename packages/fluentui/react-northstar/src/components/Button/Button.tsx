@@ -100,6 +100,8 @@ export type ButtonStylesProps = Pick<
   hasContent?: boolean;
 };
 
+export const buttonClassName = 'ui-button';
+
 /**
  * A Button enables users to take an action, such as submitting a form, opening a dialog, etc.
  *
@@ -246,7 +248,7 @@ const Button = compose<'button', ButtonProps, ButtonStylesProps, {}, {}>(
     return result;
   },
   {
-    className: 'ui-button',
+    className: buttonClassName,
     displayName: 'Button',
 
     handledProps: [
