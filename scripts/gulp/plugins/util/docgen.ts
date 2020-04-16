@@ -87,7 +87,13 @@ const defaultOptions: ts.CompilerOptions = {
   allowUnreachableCode: true,
 };
 
-const reactComponentSymbolNames = ['StatelessComponent', 'Stateless', 'StyledComponentClass', 'FunctionComponent'];
+const reactComponentSymbolNames = [
+  'StatelessComponent',
+  'Stateless',
+  'StyledComponentClass',
+  'FunctionComponent',
+  'ComponentWithAs',
+];
 
 type MaybeIntersectType = ts.Type & { types?: ts.Type[] };
 
@@ -192,32 +198,28 @@ export class Parser {
   }
 
   public getComponentInfo(
-    exp: ts.Symbol,
+    symbolParam: ts.Symbol,
     source: ts.SourceFile,
     componentNameResolver: ComponentNameResolver = () => undefined,
   ): ComponentDoc | null {
-    if (!!exp.declarations && exp.declarations.length === 0) {
+    if (!!symbolParam.declarations && symbolParam.declarations.length === 0) {
       return null;
     }
 
+    let exp = symbolParam;
+
     const type = this.checker.getTypeOfSymbolAtLocation(exp, exp.valueDeclaration || exp.declarations![0]);
     let commentSource = exp;
-    const typeSymbol = type.symbol || type.aliasSymbol || getComponentSymbolOfType(type);
 
     if (!exp.valueDeclaration) {
-      if (!typeSymbol) {
+      const componentSymbol = getComponentSymbolOfType(type);
+
+      exp = type.symbol || componentSymbol;
+      if (!exp) {
         return null;
       }
-      exp = typeSymbol;
-      const expName = exp.getName();
 
-      if (
-        expName === 'StatelessComponent' ||
-        expName === 'Stateless' ||
-        expName === 'StyledComponentClass' ||
-        expName === 'StyledComponent' ||
-        expName === 'FunctionComponent'
-      ) {
+      if (componentSymbol) {
         commentSource = this.checker.getAliasedSymbol(commentSource);
       } else {
         commentSource = exp;
@@ -225,7 +227,10 @@ export class Parser {
     }
 
     // Skip over PropTypes that are exported
-    if (typeSymbol && (typeSymbol.getEscapedName() === 'Requireable' || typeSymbol.getEscapedName() === 'Validator')) {
+    if (
+      type.symbol &&
+      (type.symbol.getEscapedName() === 'Requireable' || type.symbol.getEscapedName() === 'Validator')
+    ) {
       return null;
     }
 

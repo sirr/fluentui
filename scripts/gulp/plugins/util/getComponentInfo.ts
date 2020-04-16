@@ -67,6 +67,7 @@ const getComponentInfo = (filepath: string, ignoredParentInterfaces: string[]): 
     throw new Error(`Your file with component under "${absPath}" doesn't have a default export`);
   }
 
+  console.log(absPath);
   const componentFile = Babel.parse(fs.readFileSync(absPath).toString(), {
     configFile: false,
     presets: [['@babel/preset-typescript', { allExtensions: true, isTSX: true }]],

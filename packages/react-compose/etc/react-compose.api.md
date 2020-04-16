@@ -7,7 +7,7 @@
 import * as React from 'react';
 
 // @public (undocumented)
-export type ComponentWithAs<E extends React.ElementType, P, S = {}> = (<EE extends React.ElementType = E>(props: Omit<PropsOfElement<EE>, 'as' & keyof P> & {
+export type ComponentWithAs<E extends React.ElementType, P> = (<EE extends React.ElementType = E>(props: Omit<PropsOfElement<EE>, 'as' | keyof P> & {
     as?: EE;
 } & P) => JSX.Element) & {
     displayName?: string;
@@ -17,10 +17,10 @@ export type ComponentWithAs<E extends React.ElementType, P, S = {}> = (<EE exten
     propTypes?: React.WeakValidationMap<P> & {
         as: React.Requireable<string | ((props: any, context?: any) => any) | (new (props: any, context?: any) => any)>;
     };
-} & S;
+};
 
 // @public (undocumented)
-export function compose<T extends React.ElementType, InputProps, InputStylesProps, ParentProps, ParentStylesProps>(input: Input<T, InputProps>, inputOptions?: ComposeOptions<InputProps, InputStylesProps, ParentStylesProps>): ComponentWithAs<T, InputProps & ParentProps, {}>;
+export function compose<T extends React.ElementType, InputProps, InputStylesProps, ParentProps, ParentStylesProps>(input: Input<T, InputProps>, inputOptions?: ComposeOptions<InputProps, InputStylesProps, ParentStylesProps>): ComponentWithAs<T, InputProps & ParentProps>;
 
 // @public (undocumented)
 export type ComposedComponent<P = {}> = React.FunctionComponent<P> & {
@@ -52,7 +52,9 @@ export type ComposeRenderFunction<T extends React.ElementType = 'div', P = {}> =
 // @public (undocumented)
 export type Input<T extends React.ElementType = 'div', P = {}> = (React.FunctionComponent<P> & {
     fluentComposeConfig?: ComposePreparedOptions;
-}) | ComposeRenderFunction<T, P>;
+}) | ComposeRenderFunction<T, P & {
+    as?: React.ElementType;
+}>;
 
 // @public (undocumented)
 export type PropsOfElement<E extends keyof JSX.IntrinsicElements | React.JSXElementConstructor<any>> = JSX.LibraryManagedAttributes<E, React.ComponentPropsWithRef<E>>;
